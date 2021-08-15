@@ -1,0 +1,6 @@
+.pulumi/
+.vscode/
+bin/
+obj/
+secrets*
+Pulumi.*.yaml
