@@ -14,6 +14,7 @@ class Stack : Pulumi.Stack
     {
         var controllerCount = 1;
         var workerCount = 1;
+        var sshPrivateKeyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".ssh/id_rsa");
         var sshPublicKeyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".ssh/id_rsa.pub");
         var sshPublicKeyJson = JsonSerializer.Serialize(File.ReadAllText(sshPublicKeyPath).Trim());
 
@@ -114,13 +115,13 @@ runcmd:
                     Address = n.NetworkInterfaces.GetAt(0).Apply(n => n.Addresses[0]),
                     User = "vagrant",
                     Roles = new[] {"controlplane", "etcd"},
-                    SshKeyPath = sshPublicKeyPath,
+                    SshKeyPath = sshPrivateKeyPath,
                 }).Concat(workers.Select(n => new ClusterNodeArgs
                 {
                     Address = n.NetworkInterfaces.GetAt(0).Apply(n => n.Addresses[0]),
                     User = "vagrant",
                     Roles = new[] {"worker"},
-                    SshKeyPath = sshPublicKeyPath,
+                    SshKeyPath = sshPrivateKeyPath,
                 })).ToList(),
             UpgradeStrategy = new ClusterUpgradeStrategyArgs
             {
