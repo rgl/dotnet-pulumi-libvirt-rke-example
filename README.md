@@ -1,6 +1,6 @@
 # About
 
-**This is not yet working because Pulumi has no way to execute provision scripts inside a VM; which are required to install the RKE pre-requirements.**
+**This is barely working because Pulumi has no way to directly execute scripts inside a VM to install the RKE dependencies. Instead we are executing them from cloud-init, which is not a good enough solution, as there is no way to check for errors. We also have no way to wait for cloud-init to finish, which means you have to execute `pulumi up` again after the provisioning script finishes.**
 
 This creates an example RKE cluster in libvirt QEMU/KVM Virtual Machines using dotnet [Pulumi](https://www.pulumi.com/).
 
@@ -57,14 +57,18 @@ Launch this example:
 source secrets.sh
 pulumi login
 pulumi whoami -v
+# NB this will fail until provision.sh (executed by cloud-init) installs the
+#    RKE dependencies. you have to execute it again after cloud-init finishes
+#    (look at the machine console to known when it finishes).
 pulumi up
 ```
 
 Test accessing the cluster:
 
 ```bash
-pulumi stack output RkeState >rkestate.json # might be useful for troubleshooting.
-pulumi stack output KubeConfig >kubeconfig.yaml
+pulumi stack select
+pulumi stack output --show-secrets RkeState >rkestate.json # useful for troubleshooting.
+pulumi stack output --show-secrets KubeConfig >kubeconfig.yaml
 export KUBECONFIG=$PWD/kubeconfig.yaml
 kubectl get nodes -o wide
 ```

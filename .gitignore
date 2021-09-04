@@ -4,3 +4,5 @@ bin/
 obj/
 secrets*
 Pulumi.*.yaml
+rkestate.json
+kubeconfig.yaml

@@ -17,6 +17,8 @@ class Stack : Pulumi.Stack
         var sshPrivateKeyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".ssh/id_rsa");
         var sshPublicKeyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".ssh/id_rsa.pub");
         var sshPublicKeyJson = JsonSerializer.Serialize(File.ReadAllText(sshPublicKeyPath).Trim());
+        var provisionScriptJson = JsonSerializer.Serialize(Convert.ToBase64String(File.ReadAllBytes("provision.sh")));
+        var containerDConfigPatchJson = JsonSerializer.Serialize(Convert.ToBase64String(File.ReadAllBytes("containerd-config.toml.patch")));
 
         var network = new Network("example", new NetworkArgs
         {
@@ -55,8 +57,20 @@ users:
     lock_passwd: false
     ssh-authorized-keys:
       - {sshPublicKeyJson}
+write_files:
+  - path: /provision/provision.sh
+    owner: root:root
+    permissions: '0700'
+    encoding: b64
+    content: {provisionScriptJson}
+  - path: /provision/containerd-config.toml.patch
+    owner: root:root
+    permissions: '0600'
+    encoding: b64
+    content: {containerDConfigPatchJson}
 runcmd:
   - sed -i '/vagrant insecure public key/d' /home/vagrant/.ssh/authorized_keys
+  - /provision/provision.sh
 ",
             });
 
