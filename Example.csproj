@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Pulumi.Libvirt" Version="0.1.0" />
+    <PackageReference Include="Pulumi.Libvirt" Version="0.2.0" />
     <PackageReference Include="Pulumi.Rke" Version="3.0.0" />
   </ItemGroup>
 </Project>
