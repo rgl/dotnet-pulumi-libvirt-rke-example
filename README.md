@@ -21,7 +21,7 @@ kubectl_package_version="$(apt-cache madison kubectl | awk "/$kubectl_version-/{
 sudo apt-get install -y "kubectl=$kubectl_package_version"
 ```
 
-[Install the dotnet 5 SDK](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu):
+[Install the dotnet 6.0 SDK](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu):
 
 ```bash
 echo 'export DOTNET_CLI_TELEMETRY_OPTOUT=1' >/etc/profile.d/opt-out-dotnet-cli-telemetry.sh
@@ -30,7 +30,7 @@ wget -qO packages-microsoft-prod.deb "https://packages.microsoft.com/config/ubun
 dpkg -i packages-microsoft-prod.deb
 apt-get install -y apt-transport-https
 apt-get update
-apt-get install -y dotnet-sdk-5.0
+apt-get install -y dotnet-sdk-6.0
 ```
 
 [Install Pulumi](https://www.pulumi.com/docs/get-started/install/):
